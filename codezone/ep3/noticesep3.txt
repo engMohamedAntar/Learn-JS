@@ -1,0 +1,63 @@
+/*Change the environment threadpool size*/
+
+process.env.UV_THREADPOOL_SIZE=20;
+
+/*create an http server*/
+
+const http= require("node:http");
+const server=http.createServer((req,res)=>{ 
+    if(req.url==="/")
+        res.end("Home page");
+    else if (req.url==="/about")
+        res.end("About section");
+    else
+        res.end("Not found ");
+});
+
+server.listen(3001,()=>{
+    console.log("listening on port 3001");
+})
+
+/*kill processes*/
+
+netstat -ano | findstr :3001 ->This command will display the process ID (PID)
+ using port 3001. You can then stop it using:
+
+taskkill /PID <PID> /F -> Replace <PID> with the actual process ID.
+//another way to kill a port 
+npx kill-port 5000 ==>5000 represents the port number.
+
+/*Example*/
+
+const http= require("node:http");
+
+const server=http.createServer((req,res)=>{
+    console.log("req_url: ",req.url);
+    if(req.url==="/")
+        res.end("Home page");
+    else if (req.url==="/about")
+        res.end("About section");
+    else
+        res.end("Not found ");
+});
+
+server.listen(3001,()=>{
+    console.log("listening on port 3001");
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

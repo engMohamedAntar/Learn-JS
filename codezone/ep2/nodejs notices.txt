@@ -1,0 +1,207 @@
+//ep2
+
+/*syncronous file reading*/
+
+const fs=require("node:fs");
+const fileContent=fs.readFileSync("./hello.txt","utf8");
+console.log(fileContent);
+
+/*asyncronous file reading*/
+
+const fs = require("node:fs");
+console.log("First");
+fs.readFile("./try.txt", "utf-8", (err, cont) => {
+  if (err) console.log("no data found");
+  else console.log("file content: ", cont);
+});
+console.log("Second");
+
+/*write to a file asyncronous*/
+
+const fs = require("node:fs");
+console.log("first");
+fs.writeFile("./try.txt","this is the try file content write","utf-8",(err)=>{
+  if(err)
+    console.log("Can't wirte to the following file");
+  else
+    console.log("Done");
+});
+console.log("second");
+
+/*write to a file syncronous*/
+
+const fs = require("node:fs");
+fs.writeFileSync("./try.txt","this is the try file content write2","utf-8");
+
+/*Delete a file*/
+
+const fs = require("node:fs");
+fs.unlink("./try.txt",(err)=>{
+  if(err)
+    console.log("Can't delete this file");
+})
+
+/*writeStream and readStream*/
+
+const fs = require("node:fs");
+
+let readStream = fs.createReadStream("./try2.txt", "utf-8");
+let writeStream = fs.createWriteStream("./try1.txt", "utf-8");
+
+readStream.on("data", (chunk) => {
+  writeStream.write(`===chunk===${chunk}`);
+});
+
+/*Create a package.json*/ 
+
+npm init --yes  --> add package.json to your project(you must be in the directory of your project).
+
+/*install 'lodash' package*/
+
+npm install lodash
+
+/*remove an npm package*/
+
+npm uninstall lodash
+
+/*Install nodemon*/
+
+npm install -g nodemon -->install it golbaly
+npm install --save-dev nodemon -->install it locally to your project
+... in the package.json add a script defining how nodemon will work as follows:
+  "keyword": "nodemon main.js" -->
+... in the cmd write the following:
+  npm run keyword
+... now the cmd will whatch out the changes happening to main.js file.
+
+/*print the argumnets of current process*/
+
+console.log(process.argv);
+console.log(process.argv[2]);
+
+/*commander package*/
+
+const { Command } = require("commander");
+const program = new Command();
+program
+  .name("courses_manager")
+  .description("CLI to make courses")
+  .version("1.0.0");
+
+program
+  .command("add")
+  .alias("a")
+  .description("Add a course")
+  .argument("<title>", "add course title")
+  .option("--price <amount>", "add cousrse price")
+  .action((arg, option) => {
+    console.log("argument, option", arg, option); 
+  });
+
+program.parse(process.argv);
+...write in cmd=> node index.js add js --price 500
+  add: is the command name
+  js: is the argument which in this case is the course title
+  --price 500: is the option object ({price:500})
+
+/*inquirer*/
+
+import inquirer from 'inquirer';
+inquirer
+    .prompt([
+        {
+            type:'input',
+            name:"programming",
+            message:"What is your favorite programming language",
+            default:"none",
+        }
+    ])
+    .then((answers)=>{
+        console.log(answers);
+    })
+
+/* Project1=> inquirer for a specific command (for the 'add' command)*/
+
+import { Command } from "commander";
+
+import fs from "node:fs";
+
+const program = new Command();
+import inquirer from "inquirer";
+
+const questions = [
+  {
+    type: "input",
+    name: "title",
+    message: "Enter course title",
+  },
+  {
+    type: "number",
+    name: "price",
+    message: "Enter course price",
+  },
+];
+
+const filePath = "./courses.json";
+program
+  .name("courses_manager")
+  .description("CLI to make courses")
+  .version("1.0.0");
+
+program
+  .command("add")
+  .alias("a")
+  .description("Add a course")
+  .action(() => {
+    inquirer.prompt(questions)
+    .then((answers) => {
+      if (fs.existsSync(filePath)) {
+        fs.readFile(filePath, "utf-8", (err, fileContent) => {
+          if (err) {
+            console.log("Error", err);
+            process.exit();
+          }
+          const fullCont = JSON.parse(fileContent);
+          fullCont.push(answers);
+          fs.writeFile(filePath,JSON.stringify(fullCont), "utf-8", () => {
+            console.log("File have been added successfully2");
+          });
+        });
+      } else {
+        fs.writeFile(filePath, JSON.stringify([answers]), "utf-8", () => {
+          console.log("File have been added successfully1");
+        });
+      }
+    });
+  });
+
+program
+  .command('list')
+  .alias('l')
+  .description("list all courses")
+  .action(()=>{
+    fs.readFile(filePath,"utf-8",(err,cont)=>{
+        if(err){
+            console.log("err: ",err);
+            process.exit();
+        }
+        console.table(JSON.parse(cont));
+    })
+  })
+
+program.parse(process.argv);
+
+/*Apload project1 to npm*/
+
+1- Add the following script in the begining of your JS file:
+#!/user/bin/env node
+2- In your package.json add the following line:
+"bin": "./index.js"
+3- In cmd=> "npm login"
+4-npm publish
+5-if you want to use it without downloading it:
+in cmd-> npx antar-courses_manager
+
+/*01:06:29*/
+
+

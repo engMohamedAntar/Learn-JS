@@ -1,0 +1,27 @@
+const { MongoClient } = require("mongodb");
+const uri =
+  "mongodb+srv://aboantar852003:nodejs_123@learn-mongo-db.wocwvuu.mongodb.net/?retryWrites=true&w=majority&appName=learn-mongo-db"; //the uri comming from our atlas
+const client = new MongoClient(uri);
+
+const main = async () => {
+  await client.connect(); //connect to the MongoDB server using the client created earlier
+  console.log("Connected successfully");
+  const db = client.db("codeZone"); //choose the database to interact with
+
+  const collection = db.collection("courses"); //choose the collection to interact with
+  
+  await collection.insertOne({        //insert a collection
+    title:"course3",
+    price:3000
+  })
+  const  data = await collection.find().toArray(); // Get Query (find all the data in the database and convert it into an array).
+  console.log("data", data); 
+};
+main();
+
+/*Using mongoose (object data modeling library for mongodb)*/
+
+npm install mongoose --save
+
+
+

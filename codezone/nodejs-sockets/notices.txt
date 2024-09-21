@@ -1,0 +1,20 @@
+npm install socket.io 
+"npm init -y --> create a package.json file"
+"npm install express socket.io  --> install both express and socket.io" 
+npm install --save-dev nodemon -->install nodemon
+"start":"nodemone index.js"--> add the following  script to the package.json file
+
+
+//important
+emit --> publish to an event using emit('eventName',data)
+on -->  listen to an event using .on(eventName,callback)
+
+
+
+
+
+
+
+
+
+

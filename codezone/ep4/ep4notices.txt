@@ -1,0 +1,136 @@
+/*write an html file*/
+const http= require("node:http");
+const fs= require("node:fs");
+
+const homePage= fs.readFileSync("./homePage.html");
+const styleFile= fs.readFileSync("./style.css");
+
+const server = http.createServer((req, res) => {
+    if(req.url==="/")
+        res.write(homePage);
+    else if(req.url==="/style.css")
+        res.write(styleFile);
+    else if(req.url==="/contacts")
+        res.write("contacts");
+    else
+    {
+        res.statusCode=404;
+        res.write("Not found page");
+    }
+    res.end();
+});
+server.listen(5000, () => {
+  console.log("listing to port 5000");
+});
+
+
+
+/*ExpressJS*/
+
+npm install express --save -->install express
+
+/*Using express, get function , creating a manual logger*/
+
+const express = require("express");
+const app = express();
+
+app.use(express.static("./views")); --> make the files in the folder views be impleminted on all the app.get() functions
+
+
+//create a manual logger function
+function logger(req) {
+  console.log("Method:", req.method, "URL:", req.url);
+}
+
+
+app.get("/", (req, res) => {
+  logger(req);
+  res.send("hello world");
+});
+
+app.get("/about", (req, res) => {
+  logger(req);
+  res.send("Welcome from about page");
+});
+
+app.get("/products", (req, res) => {
+  logger(req);
+  res.send([
+    { id: 1, title: "product 1" },
+    { id: 2, title: "product 2" },
+    { id: 3, title: "product 3" },
+  ]);
+});
+
+app.listen("5000", () => {
+  console.log("listing on port 5000");
+});
+
+/*replacing the logger function with a middleware*/
+
+const express = require("express");
+const app = express();
+
+//create a middleware (this middleWare will be implimented on all the app.get functions)
+app.use((req,res,next)=>{
+  console.log("METHOD:",req.method,"URL:",req.url);
+  next();
+});
+
+
+app.get("/", (req, res) => {
+  res.send("hello world");
+});
+
+app.get("/about", (req, res) => {
+  res.send("Welcome from about page");
+});
+
+app.get("/products", (req, res) => {
+  res.send([
+    { id: 1, title: "product 1" },
+    { id: 2, title: "product 2" },
+    { id: 3, title: "product 3" },
+  ]);
+});
+
+app.listen("5000", () => {
+  console.log("listing on port 5000");
+});
+
+
+/*Install and use morgan middleware as a logger (Morgan is a logger middleWare for node.js)*/
+npm install morgan -->run in cmd
+
+//use morgan as a logger
+
+const express = require("express");
+const morgan = require("morgan");
+
+const app = express();
+app.use(morgan('dev'));
+
+
+
+app.get("/", (req, res) => {
+  res.send("hello world");
+});
+
+app.get("/about", (req, res) => {
+  res.send("Welcome from about page");
+});
+
+app.get("/products", (req, res) => {
+  res.send([
+    { id: 1, title: "product 1" },
+    { id: 2, title: "product 2" },
+    { id: 3, title: "product 3" },
+  ]);
+});
+
+app.listen("5000", () => {
+  console.log("listing on port 5000");
+});
+
+
+

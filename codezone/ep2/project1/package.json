@@ -1,0 +1,21 @@
+{
+  "name": "antar0-courses-manager",
+  "version": "1.0.0",
+  "bin": "./index.js",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "antar-courses-manager": "^1.0.0",
+    "antar1-courses-manager": "^1.0.0",
+    "antar2-courses-manager": "^1.0.0",
+    "commander": "^12.1.0",
+    "inquirer": "^10.0.3"
+  }
+}

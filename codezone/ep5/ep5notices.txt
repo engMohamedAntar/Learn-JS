@@ -1,0 +1,256 @@
+/*using an api (handling the url manually)*/
+const express=require("express");
+const app= express();
+
+const courses=[
+    {
+        id:1,
+        title: "js course",
+        price: 1000,
+    },
+    {
+        id:2,
+        title: "react course",
+        price: 2000,
+    }
+]
+
+app.get("/api/courses", (req,res)=>{
+    res.json(courses);
+});
+//get the course with id=1
+app.get("/api/courses/1", (req,res)=>{
+    res.json(courses.find((course)=> course.id===1));
+});
+//get the course with id=2
+app.get("/api/courses/2", (req,res)=>{
+    res.json(courses.find((course)=> course.id===2));
+});
+
+app.listen(5000,()=>{
+    console.log("listing to port 5000");
+});
+
+/*Using an api (handling the url automatically)*/ 
+
+const express=require("express");
+const app= express();
+
+const courses=[
+    {
+        id:1,
+        title: "js course",
+        price: 1000,
+    },
+    {
+        id:2,
+        title: "react course",
+        price: 2000,
+    }
+]
+
+//get all courses
+
+app.get("/api/courses", (req,res)=>{
+    res.json(courses);
+    res.end();
+});
+
+//get single course by id (automatically)
+
+app.get("/api/courses/:courseId", (req,res)=>{
+    const course_id=+req.params.courseId;
+    const course= courses.find((course)=>course.id=== course_id);
+    if(!course)
+        return res.status(404).json({msg: "course not found"});
+    
+    res.json(course);
+    res.end();
+});
+
+app.listen(5000,()=>{
+    console.log("listing to port 5000");
+});
+
+/*post method*/
+
+const express=require("express");
+const app= express();
+
+//use body-parser middleWare
+app.use(express.json());// or-> app.use(bodyParser.json());
+
+const courses=[
+    {
+        id:1,
+        title: "js course",
+        price: 1000,
+    },
+    {
+        id:2,
+        title: "react course",
+        price: 2000,
+    }
+]
+// post method with validating the body manually
+app.post('/api/courses/',(req,res)=>{
+    if(!req.body.title)
+        return res.json({Error:"title not provided"});
+    
+    if(!req.body.price)
+        return res.status(400).json({Error:"price not provided"});
+
+
+    courses.push({id: courses.length +1,...req.body});
+    res.json(courses);
+})
+app.listen(5000,()=>{
+    console.log("listing to port 5000");
+});
+
+
+/*validate the body using express-validator*/
+
+npm install expresss-validator -> intstall express-validator in the cmd
+
+const express=require("express");
+const app= express();
+
+//require the express-validator into your app
+const {body , validationResult}= require('express-validator');
+
+
+//use body-parser middleWare (allow us to parse json code (comming from the post method body) )
+app.use(express.json());// or-> app.use(bodyParser.json());
+
+const courses=[
+    {
+        id:1,
+        title: "js course",
+        price: 1000
+    },
+    {
+        id:2,
+        title: "react course",
+        price: 2000
+    }
+]
+
+
+// using a middleware(express-validator) to handle the post body
+app.post('/api/courses' ,
+    [
+        body('title')
+            .notEmpty()
+            .withMessage("title is required")
+            .isLength({min: 2})
+            .withMessage("title should has at least 2 chars")
+        ,body('price')
+            .notEmpty()
+            .withMessage("price is required")
+    ],(req,res)=>{
+   const errors= validationResult(req); //returns any error
+   if(!errors.isEmpty())
+        return res.status(400).json(errors.array());
+    const course={id:courses.length+1, ...req.body}
+   courses.push(course);
+   res.status(201).json(course);
+});
+
+app.listen(5000,()=>{
+    console.log("listing to port 5000");
+});
+
+
+/*patch  and delete*/
+const express=require("express");
+const app= express();
+
+//require the express-validator into your app
+const {body , validationResult}= require('express-validator');
+
+
+//use body-parser middleWare (allow us to parse json code (comming from the post method body) )
+app.use(express.json());// or-> app.use(bodyParser.json());
+
+let courses=[
+    {
+        id:1,
+        title: "js course",
+        price: 1000
+    },
+    {
+        id:2,
+        title: "react course",
+        price: 2000
+    }
+]
+
+app.get("/api/courses", (req,res)=>{
+    res.json(courses);
+    res.end();
+});
+
+//get single course by id (automatically)
+
+app.get("/api/courses/:courseId", (req,res)=>{
+    const course_id=+req.params.courseId;
+    const course= courses.find((course)=>course.id=== course_id);
+    if(!course)
+        return res.status(404).json({msg: "course not found"});
+    
+    res.json(course);
+    res.end();
+});
+
+// using a middleware(express-validator) to handle the post body
+app.post('/api/courses' ,
+    [
+        body('title')
+            .notEmpty()
+            .withMessage("title is required")
+            .isLength({min: 2})
+            .withMessage("title should has at least 2 chars")
+        ,body('price')
+            .notEmpty()
+            .withMessage("price is required")
+    ],(req,res)=>{
+   const errors= validationResult(req); //returns any error
+   if(!errors.isEmpty())
+        return res.status(400).json(errors.array());
+    const course={id:courses.length+1, ...req.body}
+   courses.push(course);
+   res.status(201).json(course);
+});
+
+//update a courses
+app.patch("/api/courses/:courseId",(req,res)=>{
+    const courseId= +req.params.courseId;
+    let course= courses.find((course)=>course.id===courseId);
+    if(!course)
+        return res.status(404).json({msg:"course not found"});
+    course= {...course, ...req.body}; // the property in req.body will override on the old property in course
+    res.json(course);
+
+})
+
+//delete a course
+app.delete("/api/courses/:courseId",(req,res)=>{
+    const courseId= +req.params.courseId;
+    //return all the courses that != courseId
+    courses= courses.filter((course)=>course.id !== courseId);
+    res.status(200).json({sucess:"true"});
+})
+
+
+app.listen(5000,()=>{
+    console.log("listing to port 5000");
+});
+
+/*the rest of the video is about cleaning the code and distriputing the code into 
+  set of folders and files*/
+
+
+
+
+

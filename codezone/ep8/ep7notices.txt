@@ -1,0 +1,25 @@
+require("dotenv").config(); // use the dotenv package to load the variables of the dotenv file to the process.env
+
+npm install dotenv --save --> install .env package locally to your project
+
+app.use(cors()); --> make it possible for the front end to access the data comming from the backend
+
+app.use(express.json()); // or-> app.use(bodyParser.json());
+
+const coursesRouter = require("./routes/courses_routes"); //import the router middleware
+app.use("/api/courses/", coursesRouter);                  //use the coursesRouter middleware
+
+//handle any unhandled url (for instance if you get a course that is not in the database)
+
+app.all("*",(req,res)=>{
+  res.status(404).json({status:httpStatusText.ERROR, message:"this course isn't available"});
+})
+
+npm install validator 
+npm install bcryptjs --> helps you to incrypt the password
+npm install jsonwebtoken --> jwt
+
+//generate a random secretOrPrivateKey using cmd
+node
+require("crypto").randomBytes(32).toString("hex")
+
