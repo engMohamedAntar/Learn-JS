@@ -39,10 +39,16 @@
     "no-underscore-dangle": "off",
     "class-methods-use-this": "off",
     "no-undef": "error",
-    "prefer-destructuring": ["warn", { "object": true, "array": false }],
     "no-unused-vars": ["off", { "argsIgnorePattern": "req|res|next|val" }],
     "no-use-before-define": "off",
     "arrow-body-style": "off",
-    "newline-after-import": "off"
+    "newline-after-import": "off",
+    "import/newline-after-import": ["off", { "count": 2 }],
+    "node/no-unsupported-features/es-syntax":"off",
+    "no-empty":"off",
+    "prefer-template":"off",
+    "prefer-destructuring":"off",
+    "import/no-extraneous-dependencies":"off",
+    "node/no-extraneous-require":"off"
   }
 }

@@ -1,14 +1,17 @@
 //server.js
+const path= require('path');
 const express= require('express');
 const dotenv= require('dotenv');
+const morgan= require('morgan');
 
 dotenv.config();
-const morgan= require('morgan');
 const dbConnection= require('./config/database');
+
 //Routes
 const categoryRoute= require('./routes/categoryRoute');
 const subCategoryRoute= require('./routes/subCategoryRoute');
 const brandRoute= require('./routes/brandRoute');
+const productRoute= require('./routes/productRoute');
 
 const ApiError= require('./utils/ApiError');
 const golbalError= require('./middlewares/errorMiddleware');
@@ -23,12 +26,14 @@ if(process.env.NODE_ENV==='development'){ //apply the morgan middleware only in 
     app.use(morgan('dev'));
 }
 
-app.use(express.json());    //parse the req.body content
+app.use(express.json());                                //parse the req.body content
+app.use(express.static(path.join(__dirname,'uploads')));
 
 //Mount Routes
 app.use('/api/v1/categories', categoryRoute);// http://localhost:8000/api/v1/categories/66e1351096a827871476a6f6/subcategories
 app.use('/api/v1/subcategories',subCategoryRoute)
-app.use('/api/v1/brands',brandRoute);
+app.use('/api/v1/brands', brandRoute);
+app.use('/api/v1/products', productRoute);
 
 //handling incorrect routes  
 app.all('*', (req,res,next)=>{
@@ -59,3 +64,8 @@ process.on('unhandledRejection',(err)=>{
 // server.close() --> stops the server from accepting new connections but allows existing connections to finish processing before fully shutting down.
 // The callback function passed to server.close() is executed once all active requests are completed and the server is ready to shut down.
 // process.exit(1)--> This command terminates the Node.js process
+
+
+// app.use(express.static(path.join(__dirname,'uploads')));--> enables you to access
+// this route-> http://localhost:8000/categories/category-c9dcad34-92cc-4ee0-a302-1189bb7b7b5a-1728220346093.jpeg
+// and you can change categories to brands or whatever

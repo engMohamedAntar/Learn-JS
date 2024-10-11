@@ -1,4 +1,5 @@
-const {check}= require('express-validator');
+const slugify= require('slugify');
+const {check,body}= require('express-validator');
 const validatorMiddleware= require('../../middlewares/validatorMiddleware');
 
 // the validation layer of the getCategory route
@@ -12,13 +13,23 @@ exports.createCategoryValidator= [
     check('name')
     .notEmpty().withMessage('Category required')
     .isLength({min:3}).withMessage('Too short category name')
-    .isLength({max:32}).withMessage('Too long cagetory name'),
+    .isLength({max:32}).withMessage('Too long cagetory name')
+    .custom((val,{req})=>{
+        req.body.slug= slugify(val);
+        return true;
+    }),
     validatorMiddleware
 ]
 
 // the validation layer of updateCategory route
 exports.updateCategoryValidator= [
     check('id').isMongoId().withMessage("Invalid category id format"),
+    body('name')
+    .optional()                         //name may not be updated
+    .custom((val,{req})=>{
+        req.body.slug= slugify(val);
+        return true;
+    }),
     validatorMiddleware
 ]
 // the validation layer of deleteCategory route

@@ -1,59 +1,46 @@
 //categoryService.js
-const slugify= require('slugify');
+const sharp= require('sharp');
+const multer= require('multer');
+const { v4: uuidv4 } = require('uuid');         //?
 const asyncHandler= require('express-async-handler');
 const CategoryModel= require('../models/categoryModel');
-const ApiError= require('../utils/ApiError');
+const factory= require('./handlersFactory');
+const {uploadSingleImage}= require('../middlewares/uploadimageMiddleware');
 
-exports.getCategories= asyncHandler( async (req,res)=>{     //asyncHandler passes the error to next() and as you know errors passed to next are handles using global error handler
-    console.log(`req.query: `,req.query);
+//upload single image
+exports.uploadCategoryImage= uploadSingleImage('image');  //?
+
+//Image processing
+exports.resizeImage= asyncHandler( async(req,res,next)=>{  //?
+    console.log(req.file);
     
-    const page= +req.query.page|| 1;
-    const limit= +req.query.limit|| 5; 
-    const skip= (page-1)* limit;
+    const fileName= `category-${uuidv4()}-${Date.now()}.jpeg`;
+    if(req.file)
+    {
+        await sharp(req.file.buffer)
+        .resize(400,400)
+        .toFormat('jpeg')
+        .jpeg({quality: 90})
+        .toFile(`uploads/categories/${fileName}`);
 
-    const categories= await CategoryModel.find({}).skip(skip).limit(limit);
-    res.status(200).send({results: categories.length,page, data: categories});
-});
-
-exports.getCategory= asyncHandler(async (req,res,next)=>{
-    console.log("req.params: ",req.params);
-    
-    const {id}= req.params;
-    const category= await CategoryModel.findById(id);
-    if(!category){
-        // res.status(404).json({msg: `No category found for this id ${id}`});
-        return next(new ApiError(`No category found for this id ${id}`,400)) ;
+        req.body.image= fileName; //? 
     }
-    res.status(200).json({data: category});
+    next();
 });
 
-exports.createCategory= asyncHandler( async(req,res)=>{
-    const {name}= req.body;
-    const category= await CategoryModel.create({name, slug:slugify(name)});
-    res.status(201).json({data: category});
-});
+exports.getCategories= factory.getAll(CategoryModel);
 
-exports.updateCategory= asyncHandler(async (req,res,next)=>{ 
-    const {id}= req.params;
-    const {name}= req.body;
-    const category= await CategoryModel.findOneAndUpdate(
-        {_id:id},
-        {name, slug: slugify(name)},
-        {new:true}  // return the updated category not the old one
-    );
-    if(!category){
-        return next(new ApiError(`No category found for this id ${id}`,400)) ;
-    }
-    res.status(200).json({data: category});
-});
+exports.getCategory= factory.getOne(CategoryModel);
 
-exports.deletCategory= asyncHandler(async(req,res,next)=>{
-    const {id}= req.params;
-    const category= await CategoryModel.findOneAndDelete( //or findByIdAndDelet(id)
-        {_id:id}
-    );
-    if(!category){
-        return next(new ApiError(`No category found for this id ${id}`,400)) ;
-    }
-    res.status(204).send();
-});
+exports.createCategory= factory.createOne(CategoryModel);
+
+exports.updateCategory= factory.updateOne(CategoryModel);
+
+exports.deletCategory= factory.deleteOne(CategoryModel);
+
+
+//notices
+//resizeImage -> this middleware used in categoryRoute after uploadCategoryImage
+//uploadCategoryImage -> we use the uploadCategoryImage in the categoryRouter
+//req.body.image= fileName; -> save image to data base (req.body is passed to the Model.create in the createOne function)
+//uuidv4 -> creates a random id

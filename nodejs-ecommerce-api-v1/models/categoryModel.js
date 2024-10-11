@@ -1,3 +1,5 @@
+//categoryModel.js
+
 const mongoose= require('mongoose');
 
 //create database schema
@@ -6,7 +8,7 @@ const categorySchema= new mongoose.Schema(
         name:{
             type: String,
             required: [true,'Category required'],
-            unique: [true,'Category must be unique'],
+            // unique: [true,'Category must be unique'],
             minlength :[3,'Too short category name'],
             maxlength:[32, 'Too long category name']
         },
@@ -19,7 +21,41 @@ const categorySchema= new mongoose.Schema(
     {timestamps: true} 
 );
 
+//return the image url in the response of createCategory,updateCategory, getCategory, getCategories
+categorySchema.post('init', (doc)=> {//?
+    if(doc.image)
+    {
+        const imageURL= `${process.env.BaseURL}/categories/${doc.image}`;
+        doc.image= imageURL;
+    }
+});
+categorySchema.post('save',(doc)=>{//?
+    if(doc.image)
+    {
+        const imageURL= `${process.env.BaseURL}/categories/${doc.image}`;
+        doc.image= imageURL;
+    }
+})
+    
+
+
+
 //create model
 const CategoryModel= mongoose.model('Category',categorySchema);
-
 module.exports= CategoryModel;
+
+
+
+
+//notices
+//post('save'): Runs after a document is successfully saved to the database(in the createCategory and updateCategory).
+//the body of schema.post('save') is executed after the document has been saved to the database, not before.
+
+//post('init'): Runs after a document is retrieved from the database(in the getCategory and getCategories).
+// After the document is retrieved, the post('init') hook will modify the image field to contain a fully-qualified URL, if applicable.
+// both post('init') and post('save') help us to return the image url in the response
+// while still saving only the image name in the database.
+
+
+
+

@@ -1,3 +1,4 @@
+//database.js
 const mongoose= require('mongoose');
 
 const dbConnection= ()=>{

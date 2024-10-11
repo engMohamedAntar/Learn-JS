@@ -1,4 +1,5 @@
-const {check}= require('express-validator');
+const slugify = require('slugify');
+const {check,body}= require('express-validator');
 const validatorMiddleware= require('../../middlewares/validatorMiddleware');
 
 // the validation layer of the getBrand route
@@ -12,13 +13,24 @@ exports.createBrandValidator= [
     check('name')
     .notEmpty().withMessage('Brand required')
     .isLength({min:3}).withMessage('Too short brand name')
-    .isLength({max:32}).withMessage('Too long brand name'),
+    .isLength({max:32}).withMessage('Too long brand name')
+    .custom((val,{req})=>{
+            req.body.slug= slugify(val);
+        return true;
+    }),
     validatorMiddleware
 ]
 
 // the validation layer of updateBrand route
 exports.updateBrandValidator= [
     check('id').isMongoId().withMessage("Invalid brand id format"),
+    body('name')
+    .optional()                         //name may not be updated
+    .custom((val,{req})=>{
+        req.body.slug= slugify(val);
+        return true;
+    })
+    ,
     validatorMiddleware
 ]
 // the validation layer of deleteBrand route

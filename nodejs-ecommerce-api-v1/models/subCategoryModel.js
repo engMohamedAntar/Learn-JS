@@ -5,6 +5,7 @@ const subCategorySchema= new mongoose.Schema(
         name:{
             type:String,
             unique: [true, "Name must be unique"], 
+            required: [true, 'subcategory name is required'],
             trim: true, //remove spaces after and before
             minLength: [2,'Too short SubCategory name'],
             maxLength: [32,'Too long SubCategory name'],
@@ -15,7 +16,7 @@ const subCategorySchema= new mongoose.Schema(
         },
         category: {     //refers to the parent category model(Category)
             type: mongoose.Schema.ObjectId, //foreign key
-            ref: 'Category',
+            ref: 'Cateogry',
             required: [true, 'subcategory must blong to a parent category']
         }
     },

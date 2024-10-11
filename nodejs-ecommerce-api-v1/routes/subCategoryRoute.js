@@ -8,7 +8,7 @@ const router= express.Router({mergeParams: true});
 
 router.route('/')
     .post(setCategoryIdToBody,createSubCategoryValidator, createSubCategory)
-    .get(createFilterObj, getSubCategories)
+    .get( createFilterObj ,getSubCategories)
 router.route('/:id')
     .get(getSubCategoryValidator, getSubCategory)
     .put(updateSubCategoryValidator, updateSubCategory)
