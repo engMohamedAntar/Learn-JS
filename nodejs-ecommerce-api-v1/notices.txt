@@ -12,8 +12,8 @@ npm install express-validator            --> express validator is used to create
 npm install colors --> colors is required in the seeder.js file
 npm install uuid --> creates a random id (to use it in the naming of the files in multer)
 npm install sharp --> convert large images to smaller (takes a buffer storage as a parameter)
-
-
+npm i bcrypt      --> install bcrypt which is used to encrypt the password before saving it to database.
+npm i jsonwebtoken --> used to create jwt for the users who signUp
 
 
 

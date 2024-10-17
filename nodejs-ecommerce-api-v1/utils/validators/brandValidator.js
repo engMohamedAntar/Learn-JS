@@ -2,12 +2,6 @@ const slugify = require('slugify');
 const {check,body}= require('express-validator');
 const validatorMiddleware= require('../../middlewares/validatorMiddleware');
 
-// the validation layer of the getBrand route
-exports.getBrandValidator= [
-    check('id').isMongoId().withMessage("Invalid brand id format"),
-    validatorMiddleware
-]
-
 // the validation layer of createBrand route
 exports.createBrandValidator= [
     check('name')
@@ -21,6 +15,11 @@ exports.createBrandValidator= [
     validatorMiddleware
 ]
 
+// the validation layer of the getBrand route
+exports.getBrandValidator= [
+    check('id').isMongoId().withMessage("Invalid brand id format"),
+    validatorMiddleware
+]
 // the validation layer of updateBrand route
 exports.updateBrandValidator= [
     check('id').isMongoId().withMessage("Invalid brand id format"),

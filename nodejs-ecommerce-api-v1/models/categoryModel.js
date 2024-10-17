@@ -21,28 +21,30 @@ const categorySchema= new mongoose.Schema(
     {timestamps: true} 
 );
 
-//return the image url in the response of createCategory,updateCategory, getCategory, getCategories
-categorySchema.post('init', (doc)=> {//?
+const setImgUrl= (doc)=>{
     if(doc.image)
     {
-        const imageURL= `${process.env.BaseURL}/categories/${doc.image}`;
-        doc.image= imageURL;
+        const imgUrl= `${process.env.BaseURL}/products/${doc.image}`;
+        doc.image= imgUrl;
     }
+}
+categorySchema.post('init', (doc)=> {//?
+   setImgUrl(doc);
 });
 categorySchema.post('save',(doc)=>{//?
-    if(doc.image)
-    {
-        const imageURL= `${process.env.BaseURL}/categories/${doc.image}`;
-        doc.image= imageURL;
-    }
+    setImgUrl(doc);
 })
     
 
-
-
 //create model
-const CategoryModel= mongoose.model('Category',categorySchema);
-module.exports= CategoryModel;
+module.exports= mongoose.model('Category',categorySchema);
+
+
+
+
+
+
+
 
 
 

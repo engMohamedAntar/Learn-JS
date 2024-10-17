@@ -12,6 +12,9 @@ const categoryRoute= require('./routes/categoryRoute');
 const subCategoryRoute= require('./routes/subCategoryRoute');
 const brandRoute= require('./routes/brandRoute');
 const productRoute= require('./routes/productRoute');
+const userRoute= require('./routes/userRoute');
+const authRoute= require('./routes/authRoute');
+
 
 const ApiError= require('./utils/ApiError');
 const golbalError= require('./middlewares/errorMiddleware');
@@ -22,7 +25,7 @@ dbConnection();
 const app= express();
 
 //middelwares
-if(process.env.NODE_ENV==='development'){ //apply the morgan middleware only in devlelopment modes
+if(process.env.NODE_ENV==='development'){               //apply the morgan middleware only in devlelopment modes
     app.use(morgan('dev'));
 }
 
@@ -30,10 +33,12 @@ app.use(express.json());                                //parse the req.body con
 app.use(express.static(path.join(__dirname,'uploads')));
 
 //Mount Routes
-app.use('/api/v1/categories', categoryRoute);// http://localhost:8000/api/v1/categories/66e1351096a827871476a6f6/subcategories
+app.use('/api/v1/categories', categoryRoute);           // http://localhost:8000/api/v1/categories/66e1351096a827871476a6f6/subcategories
 app.use('/api/v1/subcategories',subCategoryRoute)
 app.use('/api/v1/brands', brandRoute);
 app.use('/api/v1/products', productRoute);
+app.use('/api/v1/users', userRoute);
+app.use('/api/v1/auth', authRoute);
 
 //handling incorrect routes  
 app.all('*', (req,res,next)=>{

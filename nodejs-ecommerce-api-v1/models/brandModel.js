@@ -33,8 +33,16 @@ brandSchema.post('init', (doc)=> {//?
 });
 brandSchema.post('save',(doc)=>{//?
     setImgUrl(doc);
-})
+});
     
 
 
 module.exports= mongoose.model('brand',brandSchema);
+
+
+
+
+/*
+post('init') ==> the body of it is executed right after any initialization/retrieve of the data(after getOne or getMany operations) 
+post('save') this happens right after any save of the data into database (after create and update operations).
+*/

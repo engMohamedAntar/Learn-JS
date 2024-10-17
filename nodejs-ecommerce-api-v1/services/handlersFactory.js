@@ -55,7 +55,7 @@ exports.getOne= (Model)=>
 exports.getAll= (Model,modelName='')=>
     asyncHandler( async (req,res)=>{  
         let filterObj= {}; 
-        if(req.filterObj)
+        if(req.filterObj)       //filterObj is set to req when getSubCategories for a specific category.
             filterObj= req.filterObj;
 
         const documentsCount= await Model.countDocuments();
