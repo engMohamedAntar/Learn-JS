@@ -11,7 +11,7 @@ const {
     resizeImage
     } = require('../services/categoryService');
 const subCategoryRoute= require('./subCategoryRoute');
-
+const {protect, allowedTo}= require('../services/authService');
 const router= express.Router(); 
 
 router.use('/:categoryId/subcategories', subCategoryRoute); // subcategories of a specific category
@@ -19,9 +19,26 @@ router.use('/:categoryId/subcategories', subCategoryRoute); // subcategories of 
 
 router.route('/')               
     .get(getCategories)
-    .post(uploadCategoryImage, resizeImage, createCategoryValidator, createCategory)
+    .post(
+        protect,
+        allowedTo('admin', 'manager'),
+        uploadCategoryImage,
+        resizeImage,
+        createCategoryValidator, 
+        createCategory)
+
 router.route('/:id')
     .get(getCategoryValidator, getCategory)
-    .put(uploadCategoryImage, resizeImage, updateCategoryValidator, updateCategory)
-    .delete(deleteCategoryValidator, deletCategory)
+    .put(
+        protect,
+        allowedTo('admin', 'manager'),
+        uploadCategoryImage, 
+        resizeImage, 
+        updateCategoryValidator, 
+        updateCategory)
+    .delete(
+        protect,
+        allowedTo('admin'),
+        deleteCategoryValidator, 
+        deletCategory)
 module.exports= router;

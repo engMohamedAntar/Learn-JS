@@ -37,3 +37,14 @@ exports.signUpValidator= [
 
     validatorMiddleware
 ];
+
+exports.logInValidator= [
+    check('email')
+    .notEmpty().withMessage('email required')
+    .isEmail().withMessage('invalid email address'),
+
+    check('password')
+    .notEmpty().withMessage('password required')
+    .isLength({min:6}).withMessage('password must be at least 6 characters'),
+    validatorMiddleware
+];

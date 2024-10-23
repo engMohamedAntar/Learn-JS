@@ -1,6 +1,6 @@
 npm init --y                    -->initiate package.json
 npm install express --save      --> install express
-npm install --save-dev nodemon or npm i -D nodemon  --> install nodemon locally(in the devDependancy)
+npm install --save-dev nodemon or npm i -D nodemon  --> install nodemon locally in the devDependancy (it will work only in the developement mode).
 npm install dptenv --> used to access the .env file
 npm install morgan  
 npm install mongoose
