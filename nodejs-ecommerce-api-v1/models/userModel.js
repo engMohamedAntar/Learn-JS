@@ -58,5 +58,5 @@ module.exports= mongoose.model('User',userSchema);
 
 
 //notices
-// The keyword this refers to the document that is about to be saved.
+// The keyword 'this' refers to the document that is about to be saved.
 // In other words, this refers to the instance of the User model on which the save operation is being performed.

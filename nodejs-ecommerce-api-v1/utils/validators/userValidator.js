@@ -82,6 +82,32 @@ exports.updateUserValidator= [
        
     validatorMiddleware
 ];
+exports.updateLoggedUserValidator= [  
+    body('name')
+    .optional()                         //name may not be updated
+    .custom((val,{req})=>{
+        req.body.slug= slugify(val);
+        return true;
+    }),
+    check('email')
+    .optional()
+    .isEmail().withMessage('invalid email')
+    .custom(async(val,{req})=>
+        await UserModel.findOne({email:val}).then((email)=>{
+        if(email)
+            Promise.reject(new Error('This email exist before'));
+        })
+    ),
+    check('phone')
+    .optional()
+    .isMobilePhone(["ar-EG","ar-SA"])
+    .withMessage('invalid phone number only accept EG and SA phones'),
+    
+    
+    validatorMiddleware
+];
+
+
 
 exports.deleteUserValidator= [
     check('id').isMongoId().withMessage("Invalid User id format"),

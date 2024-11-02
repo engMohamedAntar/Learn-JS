@@ -33,18 +33,14 @@ exports.updateOne = (Model)=>
 
 exports.createOne= (Model)=>
     asyncHandler( async(req,res)=>{
-    //i have moved adding the slug value from validators to here because of an unknown problem
-     /* if(req.body.name)
-            req.body.slug= slugify(req.body.name);
-        else if(req.body.title)
-            req.body.slug= slugify(req.body.title);
-     */   
         const document= await Model.create(req.body);
         res.status(201).json({data: document});
     });  
 
 exports.getOne= (Model)=>
     asyncHandler(async(req,res,next)=>{
+        console.log('getOne');
+        
         const {id}= req.params;
         const document=await Model.findById(id);
         if(!document)
@@ -53,7 +49,9 @@ exports.getOne= (Model)=>
     });
 
 exports.getAll= (Model,modelName='')=>
-    asyncHandler( async (req,res)=>{  
+    asyncHandler( async (req,res)=>{
+        console.log('get all');
+          
         let filterObj= {}; 
         if(req.filterObj)       //filterObj is set to req when getSubCategories for a specific category.
             filterObj= req.filterObj;
