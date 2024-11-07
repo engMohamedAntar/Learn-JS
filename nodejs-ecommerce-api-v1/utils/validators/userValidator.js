@@ -92,8 +92,8 @@ exports.updateLoggedUserValidator= [
     check('email')
     .optional()
     .isEmail().withMessage('invalid email')
-    .custom(async(val,{req})=>
-        await UserModel.findOne({email:val}).then((email)=>{
+    .custom((val,{req})=>
+        UserModel.findOne({email:val}).then((email)=>{
         if(email)
             Promise.reject(new Error('This email exist before'));
         })

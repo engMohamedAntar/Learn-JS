@@ -21,7 +21,7 @@ exports.signUp= asyncHandler(async(req,res,next)=>{
         password: req.body.password,
     })
     //create a jwt for this user
-    const token= jwt.sign({userId: user._id}, process.env.JWT_SECRET_KEY,{expiresIn:'1d'});
+    const token= jwt.sign({userId: user._id}, process.env.JWT_SECRET_KEY,{expiresIn:'1h'});
     //return the response to client side
     res.status(201).json({data: user, token});
 });
@@ -36,7 +36,7 @@ exports.logIn= asyncHandler( async(req,res,next)=>{
         return next(new Error('invalid email or password'));
 
     //2) generate a token for this user
-    const token= jwt.sign({userId: user._id},process.env.JWT_SECRET_KEY,{expiresIn: '1d'});
+    const token= jwt.sign({userId: user._id},process.env.JWT_SECRET_KEY,{expiresIn: '1h'});
     
     //3) send response back to client side.
     res.status(200).json({data:user, token})
@@ -71,7 +71,6 @@ exports.protect= asyncHandler(async(req,res,next)=>{
         return next(new ApiError('This user is not active'), 401);
 
     req.user= user;  //?
-    console.log('protect');    
     next();
 });
 
@@ -80,9 +79,7 @@ exports.allowedTo= (...roles)=>
     asyncHandler(async(req,res,next)=>{
         // cheack weather user.role exist in roles
         if(!roles.includes(req.user.role))  //?
-            return next(new ApiError('you are not permitted to access this route',403));
-        console.log('allowed to');
-        
+            return next(new ApiError('you are not permitted to access this route',403));        
             next();
     });
 

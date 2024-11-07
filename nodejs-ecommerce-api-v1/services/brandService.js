@@ -27,13 +27,27 @@ exports.resizeImage= asyncHandler( async(req,res,next)=>{
     next();
 });
 
+// @desc Get list of brands
+// @route Get /api/v1/brands
+// @access Public
 exports.getBrands= factory.getAll(BrandModel);
 
+// @desc Get specific brand
+// @route Get /api/v1/brands/:id
+// @access Public
 exports.getBrand= factory.getOne(BrandModel);
 
+// @desc Create specific brand
+// @route Post /api/v1/brands
+// @access Private
 exports.createBrand= factory.createOne(BrandModel);
 
+// @desc Update specific brand
+// @route Put /api/v1/brands/:id
+// @access Private
 exports.updateBrand= factory.updateOne(BrandModel);
 
-
+// @desc Delete specific brand
+// @route Delete /api/v1/brands/:id
+// @access Private
 exports.deleteBrand= factory.deleteOne(BrandModel);

@@ -2,13 +2,11 @@ const slugify= require('slugify');
 const {check,body}= require('express-validator');
 const validatorMiddleware= require('../../middlewares/validatorMiddleware');
 
-// the validation layer of the getCategory route
 exports.getCategoryValidator= [
     check('id').isMongoId().withMessage("Invalid category id format"),
     validatorMiddleware
 ]
 
-// the validation layer of createCategory route
 exports.createCategoryValidator= [
     check('name')
     .notEmpty().withMessage('Category required')
@@ -21,7 +19,6 @@ exports.createCategoryValidator= [
     validatorMiddleware
 ]
 
-// the validation layer of updateCategory route
 exports.updateCategoryValidator= [
     check('id').isMongoId().withMessage("Invalid category id format"),
     body('name')
@@ -32,7 +29,6 @@ exports.updateCategoryValidator= [
     }),
     validatorMiddleware
 ]
-// the validation layer of deleteCategory route
 exports.deleteCategoryValidator= [
     check('id').isMongoId().withMessage("Invalid category id format"),
     validatorMiddleware

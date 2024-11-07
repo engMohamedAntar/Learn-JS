@@ -68,6 +68,7 @@ exports.getProduct = factory.getOne(Product, 'reviews');
 // @route   POST  /api/v1/products
 // @access  Private
 exports.createProduct = factory.createOne(Product);
+
 // @desc    Update specific product
 // @route   PUT /api/v1/products/:id
 // @access  Private

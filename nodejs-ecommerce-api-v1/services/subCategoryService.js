@@ -28,14 +28,30 @@ exports.createFilterObj= (req,res,next)=>{
     next();
 };
 
+// @desc    Create subCategories
+// @route   POST  /api/v1/subcategories
+// @access  Private
 exports.createSubCategory= factory.createOne(SubCategoryModel);
 
+// @desc    Get list of subcategories
+// @route   GET /api/v1/subcategories
+// @access  Public
 exports.getSubCategories= factory.getAll(SubCategoryModel);
 
+
+// @desc    Get specific subcategory by id
+// @route   GET /api/v1/subcategories/:id
+// @access  Public
 exports.getSubCategory= factory.getOne(SubCategoryModel);
 
+// @desc    Update specific subcategory
+// @route   PUT /api/v1/subcategories/:id
+// @access  Private
 exports.updateSubCategory= factory.updateOne(SubCategoryModel);
 
+// @desc    Delete specific subCategory
+// @route   DELETE /api/v1/subcategories/:id
+// @access  Private
 exports.deleteSubCategory= factory.deleteOne(SubCategoryModel);
 
 
