@@ -13,10 +13,10 @@ exports.createReviewValidator = [
     .withMessage("Ratings value must be between 1 to 5"),
   check("user").isMongoId().withMessage("invalid user id format")
     .custom((val,{req})=>{
-        //ensure that the entered user id is the same as the logged user id
-        if(req.user._id.toString() !== req.body.user.toString())
-            throw new Error('You can not create a review for other users, Enter logged user id');
-        return true;
+      //ensure that the entered user id is the same as the logged user id
+      if(req.user._id.toString() !== req.body.user.toString())
+          throw new Error('You can not create a review for other users, Enter logged user id');
+      return true;
     }),
   check("product")
     .isMongoId()
@@ -45,7 +45,7 @@ exports.updateReviewValidator = [
         if (!review)
           return Promise.reject(new Error("there is no review with this id"));
 
-        if (review.user.toString() !== req.user._id.toString())
+        if (review.user._id.toString() !== req.user._id.toString())
           return Promise.reject(
             new Error("you are not allowed to update this review")
           );

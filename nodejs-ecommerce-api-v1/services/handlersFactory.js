@@ -37,12 +37,18 @@ exports.createOne= (Model)=>
         res.status(201).json({data: document});
     });  
 
-exports.getOne= (Model)=>
+exports.getOne= (Model, populationOpt)=>
     asyncHandler(async(req,res,next)=>{
-        console.log('getOne');
         
-        const {id}= req.params;
-        const document=await Model.findById(id);
+        const {id} = req.params;
+        //1) Build query
+        let query= Model.findById(id);
+        if(populationOpt){
+            query= query.populate(populationOpt); //populate the reviews field
+        }
+        //2) Execute query
+        const document= await query;
+        
         if(!document)
             return next(new ApiError("No document found for this id", 404));
         res.status(200).json({data: document});
@@ -50,10 +56,9 @@ exports.getOne= (Model)=>
 
 exports.getAll= (Model,modelName='')=>
     asyncHandler( async (req,res)=>{
-        console.log('get all');
           
         let filterObj= {}; 
-        if(req.filterObj)       //filterObj is set to req when getSubCategories for a specific category.
+        if(req.filterObj)       //filterObj is set to req when getting getSubCategories for a specific category.
             filterObj= req.filterObj;
 
         const documentsCount= await Model.countDocuments();
@@ -67,4 +72,4 @@ exports.getAll= (Model,modelName='')=>
 
 //notices
 // filterObj --> when getSubCategories is called we may need to a get subCategory of a specific
-// category so we need first to check wheather we have a categoryId in the req.query object
+// category so we need first to check wheather we have a categoryId in the req.query object.

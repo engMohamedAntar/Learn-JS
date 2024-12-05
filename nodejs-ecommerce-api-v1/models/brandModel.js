@@ -28,6 +28,7 @@ const setImgUrl= (doc)=>{
         doc.image= imgUrl;
     }
 }
+
 brandSchema.post('init', (doc)=> {//?
   setImgUrl(doc);
 });

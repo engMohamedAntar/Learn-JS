@@ -14,7 +14,8 @@ const subCategoryRoute= require('./subCategoryRoute');
 const {protect, allowedTo}= require('../services/authService');
 const router= express.Router(); 
 
-router.use('/:categoryId/subcategories', subCategoryRoute); // subcategories of a specific category
+//apply nested route
+router.use('/:categoryId/subcategories', subCategoryRoute);
 // http://localhost:8000/api/v1/categories/66e1351096a827871476a6f6/subcategories
 
 router.route('/')               

@@ -28,6 +28,7 @@ const setImgUrl= (doc)=>{
         doc.image= imgUrl;
     }
 }
+
 categorySchema.post('init', (doc)=> {//?
    setImgUrl(doc);
 });

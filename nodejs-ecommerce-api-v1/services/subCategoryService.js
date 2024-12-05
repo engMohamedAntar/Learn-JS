@@ -10,9 +10,7 @@ const factory= require('./handlersFactory');
 
 
 //@desc     add categoryId to the body of the request in createSubCategory
-exports.setCategoryIdToBody= (req,res,next)=>{
-    console.log(`setCategoryIdToBody: `,req.body);
-    
+exports.setCategoryIdToBody= (req,res,next)=>{    
     if(!req.body.category)                                          // if the category isn't sent in the req.body (in case of creating a subcategory on a category)
         req.body.category= req.params.categoryId;
     next();

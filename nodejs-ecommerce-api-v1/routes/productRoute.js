@@ -2,7 +2,7 @@
 const express= require('express');
 const {getProductValidator, createProductValidator, updateProductValidator, deleteProductValidator}= require('../utils/validators/productValidator');
 const {protect, allowedTo}= require('../services/authService');
-
+const reviewRoute= require('./reviewRoute');
 const {
       getProducts,
       createProduct,
@@ -14,6 +14,10 @@ const {
     } = require('../services/productService');
 
 const router= express.Router(); 
+
+// create nested route for riviews on pruducts
+router.use('/:productId/reviews',reviewRoute);
+// http://localhost:8000/api/v1/products/66e1351096a827871476a6f6/reviews
 
 
 router.route('/')               

@@ -1,14 +1,16 @@
 const express= require('express');
 const {protect, allowedTo}= require('../services/authService');
-const {getReviews, getReview, createReview, updateReview, deleteReview}= require('../services/reviewService');
+const {getReviews, getReview, createReview, updateReview, deleteReview, createFilterObject, setProductIdAndUserIdToBody}= require('../services/reviewService');
 const {createReviewValidator, getReviewValidator, updateReviewValidator, deleteReviewValidator} = require('../utils/validators/reviewValidator');
-const router= express.Router();
+const router= express.Router({mergeParams: true});
+
 
 router.route('/')
-    .get(getReviews)
+    .get(createFilterObject,getReviews)
     .post(
         protect,
         allowedTo('user'),
+        setProductIdAndUserIdToBody,
         createReviewValidator,
         createReview
     )
