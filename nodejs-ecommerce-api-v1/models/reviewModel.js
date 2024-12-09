@@ -1,3 +1,5 @@
+/* eslint-disable prefer-arrow-callback */
+//reviewModel.js
 const mongoose = require("mongoose");
 const Product = require("./productModel");
 const reviewSchema = new mongoose.Schema(
@@ -30,15 +32,21 @@ reviewSchema.pre(/^find/, function (next) {
   next();
 });
 
-reviewSchema.statics.calcAverageRatingsAndQuantity = async function (productId) {
+reviewSchema.statics.calcAverageRatingsAndQuantity = async function (
+  productId
+) {
   const result = await this.aggregate([
     // Stage 1: get all reviews for a specific product
     {
       $match: { product: productId }, //it's like the where statement in sql
     },
-    // Stage 2: Grouping reviews based on productID and calculate avgRatings and ratingsQuantity
+    // Stage 2: Grouping reviews based on product and calculate avgRatings and ratingsQuantity
     {
-      $group: {  _id: "product", avgRatings: { $avg: "$ratings" }, ratingsQuantity: { $sum: 1 }}  //it's like the group_by in sql
+      $group: {
+        _id: "$product",
+        avgRatings: { $avg: "$ratings" },
+        ratingsQuantity: { $sum: 1 },
+      }, //it's like the group_by in sql
     },
   ]);
 
@@ -57,8 +65,23 @@ reviewSchema.statics.calcAverageRatingsAndQuantity = async function (productId) 
   }
 };
 
-reviewSchema.post("save", async function () {
-  await this.constructor.calcAverageRatingsAndQuantity(this.product);
+reviewSchema.post("save", function () {
+  // document-level event
+  this.constructor.calcAverageRatingsAndQuantity(this.product);
+});
+
+reviewSchema.post("findOneAndDelete", function (doc) {
+  //query-level event
+  doc.constructor.calcAverageRatingsAndQuantity(doc.product);
 });
 
 module.exports = mongoose.model("Review", reviewSchema);
+
+//notices
+/*
+reviewSchema.post('findOneAndDelete', async function (doc) ==>
+  You cannot use this to refer to the document being operated on (since it's a query, not a document).
+  Instead, you get the resulting document as the argument in post middleware (as doc in your case).
+  The post('findOneAndDelete') middleware gets triggered after the query is executed,
+  and Mongoose passes the resulting document (doc) to the middleware.
+*/

@@ -65,7 +65,7 @@ exports.deleteReviewValidator = [
             return Promise.reject(new Error("there is no review with this id"));
 
           //ensure that logged user is the user who is deleting the review
-          if (review.user.toString() !== req.user._id.toString())
+          if (review.user._id.toString() !== req.user._id.toString())
             return Promise.reject(
               new Error("you are not allowed to delete this review")
             );

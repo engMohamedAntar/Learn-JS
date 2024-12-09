@@ -6,16 +6,16 @@ const ApiFeatures= require('../utils/apiFeatures');
 
 
 exports.deleteOne= (Model)=>
-asyncHandler(async(req,res,next)=>{
-    const {id}= req.params;
-    const document= await Model.findOneAndDelete( //or findByIdAndDelet(id)
-        {_id:id}
-    );
-    if(!document){
-        return next(new ApiError(`No document found for this id ${id}`,400)) ;
-    }
-    res.status(204).send();
-})
+    asyncHandler(async(req,res,next)=>{
+        const {id}= req.params;
+        const document= await Model.findOneAndDelete({_id:id});
+        if(!document){
+            return next(new ApiError(`No document found for this id ${id}`,400)) ;
+        }
+
+        res.status(204).send();
+    })
+
 
 exports.updateOne = (Model)=>
     asyncHandler(async (req,res,next)=>{
@@ -28,6 +28,7 @@ exports.updateOne = (Model)=>
         if(!document){
             return next(new ApiError(`No document found for this id ${req.params.id}`,400)) ;
         }
+        document.save();
         res.status(200).json({data: document});
     });
 
