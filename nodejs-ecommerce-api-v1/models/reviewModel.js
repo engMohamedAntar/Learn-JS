@@ -18,6 +18,7 @@ const reviewSchema = new mongoose.Schema(
       max: [5, "max rating is 5.0"],
       required: [true, "review ratings required"],
     },
+    // parent reference (one to many)
     product: {
       type: mongoose.Schema.ObjectId,
       ref: "Product",
@@ -65,23 +66,34 @@ reviewSchema.statics.calcAverageRatingsAndQuantity = async function (
   }
 };
 
-reviewSchema.post("save", function () {
-  // document-level event
+reviewSchema.post("save", async function () {
+  // document-level event (document.save();)
   this.constructor.calcAverageRatingsAndQuantity(this.product);
 });
 
-reviewSchema.post("findOneAndDelete", function (doc) {
-  //query-level event
-  doc.constructor.calcAverageRatingsAndQuantity(doc.product);
+reviewSchema.post("findOneAndDelete", async function (doc) {      //? query-level event (findOneAndDelete is a query that returns a doc)
+  await doc.constructor.calcAverageRatingsAndQuantity(doc.product);
 });
 
 module.exports = mongoose.model("Review", reviewSchema);
 
+
+
+
+
+
 //notices
 /*
 reviewSchema.post('findOneAndDelete', async function (doc) ==>
-  You cannot use this to refer to the document being operated on (since it's a query, not a document).
+  You cannot use 'this' to refer to the document being operated on (since it's a query, not a document).
   Instead, you get the resulting document as the argument in post middleware (as doc in your case).
   The post('findOneAndDelete') middleware gets triggered after the query is executed,
   and Mongoose passes the resulting document (doc) to the middleware.
+*/
+/*
+reviewSchema.post("findOneAndDelete", async function (doc)   ==>
+The reason why replacing findOneAndDelete with deleteOne doesn't trigger the post("deleteOne") hook is that
+the main difference between findOneAndDelete and deleteOne is that findOndAndDelete returns the deleted document while the deleteOne doesn't
+
+
 */

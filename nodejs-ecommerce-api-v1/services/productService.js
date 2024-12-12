@@ -86,6 +86,18 @@ exports.updateProduct= factory.updateOne(ProductModel);
 exports.deleteProduct= factory.deleteOne(ProductModel);
 
 
+
+
+
+
+
+
+
+
+
+
+
+
 //  # notices
 //  asyncHandler handles the incorrect Id formate, whlie conditions inside the funcions handles the
 //  incorrect Ids.

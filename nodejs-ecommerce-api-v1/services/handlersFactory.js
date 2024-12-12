@@ -5,16 +5,17 @@ const ApiError= require('../utils/ApiError');
 const ApiFeatures= require('../utils/apiFeatures');
 
 
-exports.deleteOne= (Model)=>
-    asyncHandler(async(req,res,next)=>{
-        const {id}= req.params;
-        const document= await Model.findOneAndDelete({_id:id});
-        if(!document){
-            return next(new ApiError(`No document found for this id ${id}`,400)) ;
-        }
-
-        res.status(204).send();
-    })
+exports.deleteOne = (Model) =>
+    asyncHandler(async (req, res, next) => {
+      const { id } = req.params;
+      const document = await Model.findOneAndDelete({_id:id});  //triggers the findOneAndUpdate (that exist in the reviewModel file)
+      if (!document) {
+        return next(new ApiError(`No document found for this id ${id}`, 400));
+      }
+  
+      res.status(204).send();
+    });
+  
 
 
 exports.updateOne = (Model)=>
@@ -28,7 +29,7 @@ exports.updateOne = (Model)=>
         if(!document){
             return next(new ApiError(`No document found for this id ${req.params.id}`,400)) ;
         }
-        document.save();
+        document.save();    //triggers the save event (that exist in the reviewModel)
         res.status(200).json({data: document});
     });
 
@@ -38,7 +39,7 @@ exports.createOne= (Model)=>
         res.status(201).json({data: document});
     });  
 
-exports.getOne= (Model, populationOpt)=>
+exports.getOne= (Model, populationOpt)=>   //?
     asyncHandler(async(req,res,next)=>{
         
         const {id} = req.params;
@@ -74,3 +75,4 @@ exports.getAll= (Model,modelName='')=>
 //notices
 // filterObj --> when getSubCategories is called we may need to a get subCategory of a specific
 // category so we need first to check wheather we have a categoryId in the req.query object.
+// exports.getOne= (Model, populationOpt) ==> we send populationOpt in case of getting a product to populate the virtual field 'reviews'
