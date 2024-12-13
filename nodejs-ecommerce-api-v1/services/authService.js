@@ -44,10 +44,13 @@ exports.logIn= asyncHandler( async(req,res,next)=>{
 
 // @desc make sure the user is logged in
 exports.protect= asyncHandler(async(req,res,next)=>{
+    
     // 1) cheak weather a token is sent in the headers.
     let token;
     if(req.headers.authorization && req.headers.authorization.startsWith('Bearer'))
-        token= req.headers.authorization.split(' ')[1];
+        token= req.headers.authorization.split(' ')[1];        
+
+    
     if(!token)
         return next(new ApiError('Not logged in, please logIn first',401));
 
