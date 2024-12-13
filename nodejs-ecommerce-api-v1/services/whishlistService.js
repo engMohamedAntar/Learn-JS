@@ -9,7 +9,7 @@ exports.addProductToWishlist = asyncHandler(async (req, res, next) => {
   const user = await User.findByIdAndUpdate(
     req.user._id,
     {
-      $addToSet: { wishlist: req.body.productId }, //?
+      $addToSet: { wishlist: req.body.productId }, //? we are inserting an id in the wishlist array
     },
     {
       new: true,
@@ -31,7 +31,7 @@ exports.removeProductFromWishlist = asyncHandler(async (req, res, next) => {
   const user = await User.findByIdAndUpdate(
     req.user._id,
     {
-      $pull: { wishlist: req.params.productId }, //?
+      $pull: { wishlist: req.params.productId }, //? we are removing an id from wishlist array
     },
     {
       new: true,

@@ -1,6 +1,7 @@
 //userModel.js
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
+const { stringify } = require("uuid");
 
 const userSchema = mongoose.Schema(
   {
@@ -24,7 +25,7 @@ const userSchema = mongoose.Schema(
       required: [true, "password is required"],
       minLength: [6, "Too short password"],
     },
-    passwordResetCode: String,
+    passwordResetCode: String, 
     passwordResetExpires: Date,
     passwordResetVerified: Boolean,
 
@@ -33,7 +34,7 @@ const userSchema = mongoose.Schema(
       enum: ["user", "admin", "manager"],
       default: "user",
     },
-    active: {
+    active: {  
       type: Boolean,
       default: true,
     },
@@ -42,6 +43,16 @@ const userSchema = mongoose.Schema(
       {
         type: mongoose.Schema.ObjectId,
         ref: "Product",
+      },
+    ],
+    addresses: [  //we also can create a separate model for the address
+      {
+        id: { type: mongoose.Schema.Types.ObjectId }, // ? 
+        alias: String,
+        details: String,
+        phone: String,
+        city: String,
+        postalCode: String,
       },
     ],
     passwordChangedAt: Date,
@@ -62,3 +73,4 @@ module.exports = mongoose.model("User", userSchema);
 //notices
 // The keyword 'this' refers to the document that is about to be saved.
 // In other words, this refers to the instance of the User model on which the save operation is being performed.
+// id: { type: mongoose.Schema.Types.ObjectId } ==> we don't need this line as _id is created by default for each object in the addresses array
