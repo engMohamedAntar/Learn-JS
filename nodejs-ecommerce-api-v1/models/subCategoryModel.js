@@ -1,3 +1,4 @@
+/* eslint-disable prefer-arrow-callback */
 const mongoose= require('mongoose');
 
 const subCategorySchema= new mongoose.Schema(
@@ -16,12 +17,16 @@ const subCategorySchema= new mongoose.Schema(
         },
         category: {     //refers to the parent category model(Category)
             type: mongoose.Schema.ObjectId, //foreign key
-            ref: 'Cateogry',
+            ref: 'Category',
             required: [true, 'subcategory must blong to a parent category']
         }
     },
     {timestamps:true}
 );
 
+subCategorySchema.pre(/^find/, function (next) {
+    this.populate({ path: "category", select: "name -_id" });
+    next();
+  });
 
 module.exports= mongoose.model('SubCategory', subCategorySchema)

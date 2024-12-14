@@ -33,9 +33,7 @@ reviewSchema.pre(/^find/, function (next) {
   next();
 });
 
-reviewSchema.statics.calcAverageRatingsAndQuantity = async function (
-  productId
-) {
+reviewSchema.statics.calcAverageRatingsAndQuantity = async function (productId) {
   const result = await this.aggregate([
     // Stage 1: get all reviews for a specific product
     {
@@ -52,7 +50,7 @@ reviewSchema.statics.calcAverageRatingsAndQuantity = async function (
   ]);
 
   console.log(result);
-
+  //update the value of ratingsAverage and ratingsQunatity for the product
   if (result.length > 0) {
     await Product.findByIdAndUpdate(productId, {
       ratingsAverage: result[0].avgRatings,
@@ -66,7 +64,7 @@ reviewSchema.statics.calcAverageRatingsAndQuantity = async function (
   }
 };
 
-reviewSchema.post("save", async function () {
+reviewSchema.post("save", async function () { //executed when adding or updating a review
   // document-level event (document.save();)
   this.constructor.calcAverageRatingsAndQuantity(this.product);
 });
