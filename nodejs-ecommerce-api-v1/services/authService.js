@@ -80,6 +80,7 @@ exports.protect= asyncHandler(async(req,res,next)=>{
 // @specify the logged routes that user can access
 exports.allowedTo= (...roles)=>
     asyncHandler(async(req,res,next)=>{
+        
         // cheack weather user.role exist in roles
         if(!roles.includes(req.user.role))  //?
             return next(new ApiError('you are not permitted to access this route',403));        

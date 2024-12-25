@@ -7,17 +7,6 @@ const morgan= require('morgan');
 dotenv.config();
 const dbConnection= require('./config/database');
 
-//Routes
-const categoryRoute= require('./routes/categoryRoute');
-const subCategoryRoute= require('./routes/subCategoryRoute');
-const brandRoute= require('./routes/brandRoute');
-const productRoute= require('./routes/productRoute');
-const userRoute= require('./routes/userRoute');
-const authRoute= require('./routes/authRoute');
-const reviewRoute= require('./routes/reviewRoute');
-const wishlistRoute= require('./routes/wishlistRoute');
-const addressRoute= require('./routes/addressRoute');
-
 const ApiError= require('./utils/ApiError');
 const golbalError= require('./middlewares/errorMiddleware');
 //connect to database
@@ -25,7 +14,6 @@ dbConnection();
 
 //express app
 const app= express();
-
 //middelwares
 if(process.env.NODE_ENV==='development'){               //apply the morgan middleware only in devlelopment modes
     app.use(morgan('dev'));
@@ -35,15 +23,8 @@ app.use(express.json());                                //parse the req.body con
 app.use(express.static(path.join(__dirname,'uploads')));
 
 //Mount Routes
-app.use('/api/v1/categories', categoryRoute);           // http://localhost:8000/api/v1/categories/66e1351096a827871476a6f6/subcategories
-app.use('/api/v1/subcategories',subCategoryRoute)
-app.use('/api/v1/brands', brandRoute);
-app.use('/api/v1/products', productRoute);
-app.use('/api/v1/users', userRoute);
-app.use('/api/v1/auth', authRoute);
-app.use('/api/v1/reviews',reviewRoute);
-app.use('/api/v1/wishlist', wishlistRoute);
-app.use('/api/v1/addresses', addressRoute);
+const mounteRoutes= require('./routes'); //will get the index file by default
+mounteRoutes(app);
 
 //handling incorrect routes  
 app.all('*', (req,res,next)=>{

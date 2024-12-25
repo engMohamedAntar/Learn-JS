@@ -17,7 +17,7 @@ const reviewSchema = new mongoose.Schema(
       min: [1, "min rating is 1.0"],
       max: [5, "max rating is 5.0"],
       required: [true, "review ratings required"],
-    },
+    }, 
     // parent reference (one to many)
     product: {
       type: mongoose.Schema.ObjectId,
